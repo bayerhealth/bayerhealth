@@ -6,7 +6,6 @@ import sys
 import json
 import string
 from flask import Flask, flash, render_template, redirect, request, url_for, jsonify, session, Response
-from login import signup_f, login_f
 
 from werkzeug.utils import secure_filename
 from utils import handle_video, load_data
@@ -58,65 +57,6 @@ def upload():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             handle_video(rand_id)
             return redirect(url_for('viewall'))
-
-
-@app.route('/viewall')
-def viewall():
-    return render_template('viewall.html', videos=getVideos())
-
-
-@app.route('/summary/<string:id>')
-def summary(id):
-    (vid_filename, title, summary, transcript) = load_data(id)
-    # vid_filename="test.mp4"
-    # summary=[("zdanie1", 5), ("zdanie2", 70)]
-    # transcript=["zdania dla pierwszej minuty", "zdania dla drugiej minuty", "zdania dla trzeciej minuty"]
-    # title="Generated Title"
-    summary = json.loads(summary)
-    transcript = json.loads(transcript)
-    return render_template('summary.html', vid_filename=vid_filename, summary=summary, transcript=transcript, title=title, len=len, id=id)
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if 'username' in session:
-        return redirect(url_for('upload'))
-    if request.method == 'POST':
-        username = request.form['user']
-        password = request.form['password']
-        if login_f(username, password):
-            session['username'] = username
-            session['password'] = password
-            return redirect(url_for('main'))
-        else:
-            return render_template('login.html', info="Bad login or password!")
-    return render_template('login.html', info="")
-
-
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    if 'username' in session:
-        return redirect(url_for('upload'))
-    if request.method == 'POST':
-        username = request.form['user']
-        password = request.form['password']
-        if signup_f(username, password):
-            return redirect(url_for('upload'))
-        else:
-            # Bad login or password
-            return render_template('signup.html')
-
-    return render_template('signup.html')
-
-
-@app.route('/logout', methods=['GET', 'POST'])
-def logout():
-    del session['username']
-    del session['password']
-    return redirect('/')
 
 
 if __name__ == '__main__':
