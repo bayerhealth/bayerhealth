@@ -1,3 +1,3 @@
-def handle_video(img):
+def handle_img(img):
     filepath = 'static/plants/'+img+'.jpg'
     print("Uploaded: " + filepath)
