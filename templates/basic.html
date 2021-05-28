@@ -11,21 +11,30 @@
   </head>
   
   <body>
+    <nav>
+      <ul style="padding: 1rem;">
+        <li><a href="/index">Home</a></li>
+        <li><a href="/map">Map</a></li>
+        <li><a href="/stats">Statistics</a></li>
+      </ul>  
+    </nav>
+
+
     <section>
       <div style="flex: 1;height:100%">
         {% block content %} {% endblock %}
       </div>
-      <footer>
-        <nav>
-          <ul>
-            <li><a href="/index">Home</a></li>
-            <li>Made with ❤ by J&K</li>
-            <br/>
-            <br/>developed for: <br/><br/>
-            <img src="static/pics/bayer.png" width="150px">
-          </ul>
-        </nav>
-      </footer>
     </section>
+
+
+    <footer>
+      <ul style="text-align: center; list-style: none;">
+        <li>Made with ❤ by J&K</li>
+        <br/>
+        <br/>developed for: <br/><br/>
+        <img src="static/pics/bayer.png" width="150px">
+      </ul>
+    </footer>
+    
   </body>
 </html>

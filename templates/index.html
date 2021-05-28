@@ -1,13 +1,16 @@
 {% extends "basic.html" %}
 {% block content %}
+
 <header>
-  <nav>
-    <h1>Hadamard</h1>
-  </nav>
+  <h1 style="text-align: center;">Upload a picture of your plant</h1>
 </header>
-      <form action = "index" method = "POST" 
-         enctype = "multipart/form-data">
-         <input type = "file" name = "file" />
-         <input type = "submit"/>
-      </form>   
+
+<section>
+  <form action = "index" method = "POST" 
+    enctype = "multipart/form-data">
+    <input type = "file" name = "file" />
+    <input type = "submit"/>
+  </form>   
+</section>
+
 {% endblock %}

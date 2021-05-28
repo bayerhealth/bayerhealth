@@ -49,6 +49,14 @@ def index():
             handle_video(rand_id)
             return redirect(url_for('index'))
 
+@app.route('/map')
+def plant_map():
+    return render_template('map.html')
+
+@app.route('/stats')
+def statistics():
+    return render_template('stats.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
