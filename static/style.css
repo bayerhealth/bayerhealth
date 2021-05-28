@@ -1,0 +1,54 @@
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.vspacer {
+    flex: 1;
+}
+
+form{
+    padding-top: 25%;
+    text-align: center;
+}
+
+.video{
+    text-align: center;
+    width: 100%;
+}
+
+video{
+    width: 100%;
+}
+
+.summary{
+    width: 100%;
+}
+
+.summary a{
+    text-decoration: none;
+    color: black;
+    font-weight: normal;
+}
+
+.summary a:hover{
+    text-decoration: none;
+    background-color: rgba(60, 146, 238, 0.372);
+}
+
+.transcript a{
+    text-decoration: none;
+}
+
+.hilight kbd{
+    background-color:rgb(249, 83, 83);
+}
