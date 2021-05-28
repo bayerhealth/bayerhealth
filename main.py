@@ -5,7 +5,7 @@ import sys
 import json
 import string
 from flask import Flask, flash, render_template, redirect, request, url_for, jsonify, session, Response
-from utils import handle_video
+from utils import handle_img
 from werkzeug.utils import secure_filename
 
 
@@ -46,7 +46,7 @@ def index():
             rand_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
             filename = secure_filename(rand_id + '.jpg')
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            handle_video(rand_id)
+            handle_img(rand_id)
             return redirect(url_for('index'))
 
 @app.route('/map')
