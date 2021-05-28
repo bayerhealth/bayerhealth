@@ -1,15 +1,12 @@
 import os
 import os.path
 import random
-import hashlib
 import sys
 import json
 import string
 from flask import Flask, flash, render_template, redirect, request, url_for, jsonify, session, Response
 
 from werkzeug.utils import secure_filename
-from utils import handle_video, load_data
-from db import getVideos
 
 
 UPLOAD_FOLDER = 'static/vid'
