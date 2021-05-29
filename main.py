@@ -47,7 +47,7 @@ def index():
             filename = secure_filename(rand_id + '.jpg')
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             handle_img(rand_id)
-            return redirect(url_for('index'))
+            return render_template('results.html', plant_img=os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
 @app.route('/map')
 def plant_map():

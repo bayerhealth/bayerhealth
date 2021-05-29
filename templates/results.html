@@ -1,0 +1,14 @@
+{% extends "basic.html" %}
+{% block content %}
+
+<header>
+  <h1 style="text-align: center;">Your Results</h1>
+</header>
+
+<section>
+  {% if plant_img %}
+  <img src="{{ plant_img }}" alt="plant_img">
+  {% endif %}
+</section>
+
+{% endblock %}
