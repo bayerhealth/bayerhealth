@@ -27,12 +27,18 @@ def main():
     return redirect(url_for('index'))
 
 
-@app.route('/index', methods=["GET", 'POST'])
+@app.route('/index')
 def index():
+    return render_template('index.html')
+    
+
+@app.route('/process', methods=["GET", "POST"])
+def process():
     if request.method == "GET":
-        return render_template('index.html')
+        return redirect(url_for('index'))
     elif request.method == 'POST':
         # check if the post request has the file part
+        print(request.form)
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)

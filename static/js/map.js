@@ -1,5 +1,3 @@
-var map = L.map('mapid').setView([52, 21], 10);
-
 var googleTerrain = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
     maxZoom: 20,
     subdomains:['mt0','mt1','mt2','mt3']
@@ -15,22 +13,53 @@ var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={
     subdomains:['mt0','mt1','mt2','mt3']
 });
 
-googleStreets.addTo(map);
+var mymap = L.map('mapid')
+var mylat;
+var mylng;
+var currTileLayer = 'Streets';
+var myMarkers = L.layerGroup();
+
+googleStreets.addTo(mymap);
 
 function addCurrentLocation(lat, lng){
     mylat = lat;
     mylng = lng
-    map.setView([mylat, mylng], 10);     
-    var marker = L.marker([mylat, mylng]).bindPopup("You're here").addTo(map);
+    mymap.setView([mylat, mylng], 16);
+                 
+    var marker = L.marker([mylat, mylng]).bindPopup("Tu jesteś").addTo(mymap);
+    // show('Siłownia');
 }
 
-navigator.geolocation.getCurrentPosition(position => addCurrentLocation(position.coords.latitude, position.coords.longitude),
-					 error => addCurrentLocation(54.219761, 21.002734));
+function getMyPosition() {
+    navigator.geolocation.getCurrentPosition(position => addCurrentLocation(position.coords.latitude, position.coords.longitude),
+					 error => addCurrentLocation(52.219761, 21.002734));
+}
 
-// var mymap = L.map('mapid').setView([51.505, -0.09], 13);
-// var mylat;
-// var mylng;
-// var myMarkers = L.layerGroup();
+function changeMapView() {
+    if (currTileLayer === 'Streets') {
+        mymap.removeLayer(googleStreets);
+        googleSat.addTo(mymap);
+        // console.log('to sat');
+        currTileLayer = 'Sat';
+    }
+    else if (currTileLayer === 'Sat') {
+        mymap.removeLayer(googleSat);
+        googleStreets.addTo(mymap);
+        // console.log('to str');
+        currTileLayer = 'Streets';
+    }
+}
+
+// Buttons
+
+L.easyButton('fas fa-map', function(btn, map){
+    changeMapView();
+}).addTo(mymap);
+
+L.easyButton('fas fa-map-marker-alt', function(btn, map){
+    getMyPosition();
+}).addTo(mymap);
+
 
 // var gym = L.icon({
 //     iconUrl: 'static/pics/gym.svg',
@@ -126,8 +155,7 @@ navigator.geolocation.getCurrentPosition(position => addCurrentLocation(position
 // }
 
 
-navigator.geolocation.getCurrentPosition(position => addCurrentLocation(position.coords.latitude, position.coords.longitude),
-					 error => addCurrentLocation(52.219761, 21.002734));
+
 
 
 // function encodeQueryData(data) {
@@ -148,7 +176,5 @@ navigator.geolocation.getCurrentPosition(position => addCurrentLocation(position
 //     marker.addTo(myMarkers);
 // }
 
-// function myView() {
-//     mymap.setView([mylat, mylng], 16);
-// }
 
+getMyPosition();

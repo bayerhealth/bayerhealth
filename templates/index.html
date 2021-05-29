@@ -6,13 +6,14 @@
 </header>
 
 <section>
-  <!-- <input type="file" accept="image/*" onchange="previewImage(event)"> -->
-  <!-- <div style=""> -->
-    <img id="preview" style="height: 350px; max-width: 90%; object-fit: cover;"/>
-  <!-- </div> -->
-  <form action = "index" method = "POST" enctype = "multipart/form-data" style="padding-top: 2rem;">
+
+  <img id="preview" style="height: 350px; max-width: 90%; object-fit: cover;"/>
+  <form action="process" method = "POST" enctype = "multipart/form-data" style="padding-top: 2rem;">
     
-    <input type="file" name="file" accept="image/*" onchange="previewImage(event)"/>
+    <input type="file" name="file" accept="image/*" onchange="previewImage(event)" onclick="fillForm"/>
+    <input name="lat" id="lat" style="display: none;"/>
+    <input name="lng" id="lng" style="display: none;"/>
+
     <script>
       const previewImage = e => {
           const preview = document.getElementById('preview');
@@ -20,9 +21,13 @@
           preview.onload = () => URL.revokeObjectURL(preview.src);
       };
     </script>
-    <input type="submit"/>
+
+    <input type="submit" onclick="fillForm"/>
   </form>   
+
 </section>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
 
 {% endblock %}
 
