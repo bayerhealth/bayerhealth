@@ -24,15 +24,19 @@
   <div id="mapid" style="min-height:600px; width: 100vh;"></div>
 
   <form action="" method="POST" enctype="multipart/form-data" style="padding-top: 2rem;">
-    
+    <div class="tooltip">
     <input type="text" name="plants"/>
+<<<<<<< HEAD
     <input type="submit" style="background: rgb(79, 143, 106);" value="Submit"/>
+=======
+    <span class="tooltiptext">Enter plant names separated with spaces to filter. Leave blank for no filter.</span>
+    </div>
+    <input type="submit" value="Search"/>
+>>>>>>> befc999896beb806385557443966e65ba4cd5f2d
 
   </form> 
 
-  {% for plant in plants %}
-  {{ plant }}
-  {% endfor %}
+  <ul class="searched">{% for plant in searched %}<li>{{ plant }}</li>{% endfor %}</ul>
 </section>
 
 <script type="text/javascript" src="{{ url_for('static', filename='js/map.js') }}"></script>
@@ -75,7 +79,7 @@ function addCurrentLocation(lat, lng){
     mylng = lng
     mymap.setView([mylat, mylng], 16);
                  
-    myMarker = L.marker([mylat, mylng], {icon: man, zIndexOffset: -1})
+    myMarker = L.marker([mylat, mylng], {icon: man, zIndexOffset: -1});
     myMarker.addTo(mymap);
 }
 
