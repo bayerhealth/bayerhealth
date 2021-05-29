@@ -35,7 +35,7 @@ valid_num = valid_set.samples
 
 
 #Model
-num_classes = 47
+num_classes = 60
 old = keras.models.load_model('model.hdf5')
 
 model = Sequential()
