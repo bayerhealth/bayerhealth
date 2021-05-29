@@ -97,7 +97,7 @@ def process():
             rand_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
             filename = secure_filename(rand_id + '.jpg')
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            handle_img(rand_id)
+            handle_img(rand_id, session["model"])
             upload_plant(filename, float(request.form['lat']), float(request.form['lng']), 'apple', 'sick', 'abc@xyz.com')
             return render_template('results.html', 
                 plant_img=os.path.join(app.config['UPLOAD_FOLDER'], filename)
