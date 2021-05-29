@@ -129,6 +129,14 @@ def settings():
         session["email"] = request.form["email"]
         return render_template('settings.html', email=session["email"], model=session["model"])
 
+@app.route("/results/<id>")
+def results(id):
+    plant = Plant.query.get(id)
+    return render_template("results.html", 
+        lat=plant.Latitude, 
+        lng=plant.Longitude, 
+        plant_img=url_for('static', filename=os.path.join('plants', plant.ImageFile)))
+
 # -------^ROUTES^-------
 
 if __name__ == '__main__':
