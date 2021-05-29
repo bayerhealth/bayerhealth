@@ -38,7 +38,7 @@ class Plant(db.Model):
     AuthorEMail = db.Column(db.String(150))
 
     def __repr__(self):
-        return f"Plant('{self.DateTime}', '{self.Latitude}', '{self.Longitude}', '{self.ImageFile}', '{self.PlantType}', '{self.Health}')"
+        return f"Plant('{self.DateTime}', '{self.Latitude}', '{self.Longitude}', '{self.ImageFile}', '{self.PlantType}', '{self.Health}','{self.AuthorEMail}')"
 
 # -----------------^DATABASE^-----------------------
 
@@ -97,8 +97,8 @@ def process():
             rand_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
             filename = secure_filename(rand_id + '.jpg')
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            handle_img(rand_id, session["model"])
-            upload_plant(filename, float(request.form['lat']), float(request.form['lng']), 'apple', 'sick', 'abc@xyz.com')
+            pred = handle_img(rand_id, session["model"])
+            upload_plant(filename, float(request.form['lat']), float(request.form['lng']), pred[0], pred[1], session["email"])
             return render_template('results.html', 
                 plant_img=os.path.join(app.config['UPLOAD_FOLDER'], filename)
             )
@@ -128,14 +128,6 @@ def settings():
         session["model"] = request.form["model"]
         session["email"] = request.form["email"]
         return render_template('settings.html', email=session["email"], model=session["model"])
-
-@app.route("/results/<id>")
-def results(id):
-    plant = Plant.query.get(id)
-    return render_template("results.html", 
-        lat=plant.Latitude, 
-        lng=plant.Longitude, 
-        plant_img=url_for('static', filename=os.path.join('plants', plant.ImageFile)))
 
 # -------^ROUTES^-------
 
