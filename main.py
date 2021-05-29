@@ -1,6 +1,7 @@
 import os
 import os.path
 import random
+import re
 import sys
 import json
 import string
@@ -28,13 +29,15 @@ db = SQLAlchemy(app)
 class Plant(db.Model):
     Id = db.Column(db.Integer, primary_key=True)
     DateTime = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    Latitude = db.Column(db.Float, nullable=False)
+    Longitude = db.Column(db.Float, nullable=False)
     ImageFile = db.Column(db.String(20), nullable=False)
     PlantType = db.Column(db.String(20))
     Health = db.Column(db.String(20))
     AuthorEMail = db.Column(db.String(150))
 
     def __repr__(self):
-        return f"Plant('{self.DateTime}', '{self.ImageFile}', '{self.PlantType}', '{self.Health}')"
+        return f"Plant('{self.DateTime}', '{self.Latitude}', '{self.Longitude}', '{self.ImageFile}', '{self.PlantType}', '{self.Health}')"
 
 # -----------------^DATABASE^-----------------------
 
@@ -42,11 +45,22 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
     
-def upload_plant(ImageFile, PlantType, Health, AuthorEMail):
-    entry = Plant(ImageFile=ImageFile, PlantType=PlantType, Health=Health, AuthorEMail=AuthorEMail)
+def upload_plant(ImageFile, Latitude, Longitude, PlantType, Health, AuthorEMail):
+    entry = Plant(ImageFile=ImageFile, Latitude=Latitude, Longitude=Longitude, PlantType=PlantType, Health=Health, AuthorEMail=AuthorEMail)
     print(entry)
     db.session.add(entry)
     db.session.commit()
+
+def get_plant_types(plant_types):
+    if plant_types:
+        plants = Plant.query.filter(Plant.PlantType.in_(plant_types)).all()
+    else:
+        plants = Plant.query.all()
+    parsed = []
+    for plant in plants:
+        pl_data = {'id': plant.Id, 'lat': plant.Latitude, 'lng': plant.Longitude, 'health': plant.Health}
+        parsed.append(pl_data)
+    return parsed
 
 # ------------------^FUNCTIONS^------------------------------
 
@@ -81,13 +95,20 @@ def process():
             filename = secure_filename(rand_id + '.jpg')
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             handle_img(rand_id)
+            upload_plant(filename, float(request.form['lat']), float(request.form['lng']), 'apple', 'sick', 'abc@xyz.com')
             return render_template('results.html', 
                 plant_img=os.path.join(app.config['UPLOAD_FOLDER'], filename)
             )
 
-@app.route('/map')
+@app.route('/map', methods=["GET", "POST"])
 def plant_map():
-    return render_template('map.html')
+    if request.method == "GET":
+        return render_template('map.html', plants=get_plant_types(None))
+    elif request.method == "POST":
+        print(request.form)
+        plant_types = request.form['plants'].split()
+        plants = get_plant_types(plant_types)
+        return render_template('map.html', plants=plants)
 
 @app.route('/stats')
 def statistics():

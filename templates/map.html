@@ -22,8 +22,128 @@
 
   <!-- Map -->
   <div id="mapid" style="min-height:600px; width: 100vh;"></div>
+
+  <form action="" method="POST" enctype="multipart/form-data" style="padding-top: 2rem;">
+    
+    <input type="text" name="plants"/>
+    <input type="submit"/>
+
+  </form> 
+
+  {% for plant in plants %}
+  {{ plant }}
+  {% endfor %}
 </section>
 
 <script type="text/javascript" src="{{ url_for('static', filename='js/map.js') }}"></script>
+
+<script>
+
+var googleTerrain = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+
+var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+
+var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+
+var mymap = L.map('mapid')
+var mylat;
+var mylng;
+var currTileLayer = 'Streets';
+var myMarkers = L.layerGroup();
+var myMarker
+
+var man = L.icon({
+    iconUrl: 'static/pics/man.svg',
+    iconSize: [20, 40],
+    iconAnchor: [10, 45],
+    popupAnchor: [0, 0],
+});
+
+googleStreets.addTo(mymap);
+
+function addCurrentLocation(lat, lng){
+    mylat = lat;
+    mylng = lng
+    mymap.setView([mylat, mylng], 20);
+                 
+    myMarker = L.marker([mylat, mylng], {icon: man, zIndexOffset: -1})
+    myMarker.addTo(mymap);
+}
+
+function getMyPosition() {
+    navigator.geolocation.getCurrentPosition(position => addCurrentLocation(position.coords.latitude, position.coords.longitude),
+					 error => addCurrentLocation(52.219761, 21.002734));
+}
+
+function changeMapView() {
+    if (currTileLayer === 'Streets') {
+        mymap.removeLayer(googleStreets);
+        googleSat.addTo(mymap);
+        // console.log('to sat');
+        currTileLayer = 'Sat';
+    }
+    else if (currTileLayer === 'Sat') {
+        mymap.removeLayer(googleSat);
+        googleStreets.addTo(mymap);
+        // console.log('to str');
+        currTileLayer = 'Streets';
+    }
+}
+
+// Buttons
+
+L.easyButton('fas fa-map', function(btn, map){
+    changeMapView();
+}).addTo(mymap);
+
+L.easyButton('fas fa-map-marker-alt', function(btn, map){
+    getMyPosition();
+}).addTo(mymap);
+
+// Markers
+
+var myMarkers;
+
+// const icon = Leaflet.divIcon({
+//   className: "my-custom-pin",
+//   iconAnchor: [0, 24],
+//   labelAnchor: [-6, 0],
+//   popupAnchor: [0, -36],
+//   html: `<span style="${markerHtmlStyles}" />`
+// })
+
+var red = L.icon({
+    iconUrl: 'static/pics/plant-red.svg',
+    iconSize: [20, 40],
+    iconAnchor: [10, 36],
+    popupAnchor: [0, 0],
+});
+var green = L.icon({
+    iconUrl: 'static/pics/plant-green.svg',
+    iconSize: [20, 40],
+    iconAnchor: [10, 36],
+    popupAnchor: [0, 0],
+});
+
+
+mymap.removeLayer(myMarkers);
+myMarkers = L.layerGroup();
+{% for plant in plants %}
+L.marker([{{ plant['lat'] }}, {{ plant['lng'] }}], {icon: red}).addTo(mymap);
+{% endfor %}
+myMarkers.addTo(mymap);
+
+getMyPosition();
+
+</script>
 
 {% endblock %}
