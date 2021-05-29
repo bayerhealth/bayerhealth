@@ -16,7 +16,7 @@ train_datagen = ImageDataGenerator(rescale=1./255,
 valid_datagen = ImageDataGenerator(rescale=1./255)
 
 batch_size = 128
-base_dir = "data/"
+base_dir = "../Downloads/dataset/dataset/"
 
 
 training_set = train_datagen.flow_from_directory(base_dir+'train',
@@ -35,7 +35,7 @@ valid_num = valid_set.samples
 
 
 #Model
-num_classes = 2
+num_classes = 47
 old = keras.models.load_model('model.hdf5')
 
 model = Sequential()
@@ -48,10 +48,10 @@ model.add(Dense(num_classes, name='new_Dense', activation='softmax'))
 model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
 model.summary()
 
-history = model.fit_generator(training_set,
+history = model.fit(training_set,
                          steps_per_epoch=train_num//batch_size,
                          validation_data=valid_set,
                          epochs=2,
                          validation_steps=valid_num//batch_size)
 
-model.save("ml.h5")
+model.save("model.h5")
