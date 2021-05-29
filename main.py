@@ -47,7 +47,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
     
 def upload_plant(ImageFile, Latitude, Longitude, PlantType, Health, AuthorEMail):
-    entry = Plant(ImageFile=ImageFile, Latitude=Latitude, Longitude=Longitude, PlantType=PlantType, Health=Health, AuthorEMail=AuthorEMail)
+    entry = Plant(ImageFile=ImageFile, Latitude=Latitude, Longitude=Longitude, PlantType=PlantType.lower(), Health=Health.lower(), AuthorEMail=AuthorEMail)
     print(entry)
     db.session.add(entry)
     db.session.commit()
@@ -56,6 +56,7 @@ def upload_plant(ImageFile, Latitude, Longitude, PlantType, Health, AuthorEMail)
 
 def get_plant_types(plant_types):
     if plant_types:
+        plant_types = [x.lower() for x in plant_types]
         plants = Plant.query.filter(Plant.PlantType.in_(plant_types)).all()
     else:
         plants = Plant.query.all()
