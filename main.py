@@ -108,7 +108,7 @@ def plant_map():
         print(request.form)
         plant_types = request.form['plants'].split()
         plants = get_plant_types(plant_types)
-        return render_template('map.html', plants=plants)
+        return render_template('map.html', plants=plants, searched=request.form['plants'].split())
 
 @app.route('/stats')
 def statistics():
