@@ -22,6 +22,7 @@ app.secret_key = 'trzyq'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
+
 # -------------^CONFIGS^-------------
 
 db = SQLAlchemy(app)
@@ -66,6 +67,8 @@ def get_plant_types(plant_types):
 
 @app.route('/')
 def main():
+    session["email"] = "admin@hadamard.pl"
+    session["model"] = "World"
     return redirect(url_for('index'))
 
 
@@ -119,10 +122,12 @@ def statistics():
 @app.route('/settings', methods=["GET", "POST"])
 def settings():
     if request.method == "GET":
-        return render_template('settings.html')
+        return render_template('settings.html', email=session["email"], model=session["model"])
     elif request.method == 'POST':
-        print(request.form)
-        return render_template('settings.html')
+        session.permanent = True
+        session["model"] = request.form["model"]
+        session["email"] = request.form["email"]
+        return render_template('settings.html', email=session["email"], model=session["model"])
 
 @app.route("/results/<id>")
 def results(id):
