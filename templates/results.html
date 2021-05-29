@@ -1,4 +1,104 @@
 {% extends "basic.html" %}
+
+{% block include %}
+<style>
+// sets
+
+$gl-ms         : "screen and (max-width: 23.5em)"; // up to 360px
+$gl-xs         : "screen and (max-width: 35.5em)"; // up to 568px
+$gl-sm         : "screen and (max-width: 48em)";   // max 768px
+$gl-md         : "screen and (max-width: 64em)";   // max 1024px
+$gl-lg         : "screen and (max-width: 80em)";   // max 1280px
+
+// table style
+
+table 			      { 
+  border-spacing: 1; 
+  border-collapse: collapse; 
+  background:white;
+  border-radius:6px;
+  overflow:hidden;
+  max-width:800px; 
+  width:100%;
+  margin:0 auto;
+  position:relative;
+  
+  *               { position:relative }
+  
+  td,th           { padding-left:8px}
+
+  thead tr        { 
+    height:60px;
+    background:#FFED86;
+    font-size:16px;
+  }
+  
+  tbody tr        { height:48px; border-bottom:1px solid #E3F1D5 ;
+    &:last-child  { border:0; }
+  }
+  
+ 	td,th 					{ text-align:left;
+		&.l 					{ text-align:right }
+		&.c 					{ text-align:center }
+		&.r 					{ text-align:center }
+	}
+}
+
+
+@media #{$gl-xs}              {
+  
+  table					              { display:block;
+	  > *,tr,td,th              { display:block }
+    
+    thead                     { display:none }
+    tbody tr                  { height:auto; padding:8px 0;
+      td                      { padding-left:45%; margin-bottom:12px;
+        &:last-child          { margin-bottom:0 }
+        &:before              { 
+          position:absolute;
+          font-weight:700;
+          width:40%;
+          left:10px;
+          top:0
+        }
+        
+        &:nth-child(1):before { content:"Code";}
+        &:nth-child(2):before { content:"Stock";}
+        &:nth-child(3):before { content:"Cap";}
+        &:nth-child(4):before { content:"Inch";}
+        &:nth-child(5):before { content:"Box Type";}
+      }        
+    }
+  }
+}  	
+
+
+
+
+// body style
+
+body               { 
+  background:#9BC86A; 
+  font:400 14px 'Calibri','Arial';
+  padding:20px;
+}
+
+blockquote {
+  color:white;
+  text-align:center;
+}
+</style>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<!-- Easy-Button -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+<script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+
+{% endblock %}
+
 {% block content %}
 
 <header>
@@ -9,6 +109,137 @@
   {% if plant_img %}
   <img src="{{ plant_img }}" alt="plant_img" style="height: 350px; max-width: 90%; object-fit: cover;"/>
   {% endif %}
+  <table style="border-top: 3px solid black; margin-top: 1rem;">
+    <tbody>
+      <tr>
+        <td><b>Date</b></td>
+        <td>{{ date }}</td>
+      </tr>
+      <tr>
+        <td><b>Latitude</b></td>
+        <td>{{ lat }}</td>
+      </tr>
+         <tr>
+        <td><b>Longitude</b></td>
+        <td>{{ lng }}</td>
+      </tr>
+         <tr>
+        <td><b>Plant</b></td>
+        <td>{{ plant }}</td>
+      </tr>
+         <tr>
+        <td><b>Plant Health</b></td>
+        <td>{{ health }}</td>
+      </tr>
+    </tbody>
+  <table/>
+
+<!-- Map -->
+<div id="mapid" style="min-height:600px; width: 100vh;"></div>
+
 </section>
+
+<script>
+
+  var googleTerrain = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+      maxZoom: 20,
+      subdomains:['mt0','mt1','mt2','mt3']
+  });
+  
+  var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+      maxZoom: 20,
+      subdomains:['mt0','mt1','mt2','mt3']
+  });
+  
+  var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+      maxZoom: 20,
+      subdomains:['mt0','mt1','mt2','mt3']
+  });
+  
+  var mymap = L.map('mapid')
+  var mylat;
+  var mylng;
+  var currTileLayer = 'Streets';
+  var myMarkers = L.layerGroup();
+  var myMarker
+  
+  var man = L.icon({
+      iconUrl: '/static/pics/man.svg',
+      iconSize: [20, 40],
+      iconAnchor: [10, 45],
+      popupAnchor: [0, 0],
+  });
+  
+  googleStreets.addTo(mymap);
+  
+  function addCurrentLocation(lat, lng){
+      mylat = lat;
+      mylng = lng
+      mymap.setView([mylat, mylng], 16);
+                   
+      myMarker = L.marker([mylat, mylng], {icon: man, zIndexOffset: -1});
+      myMarker.addTo(mymap);
+  }
+  
+  function getMyPosition() {
+      navigator.geolocation.getCurrentPosition(position => addCurrentLocation(position.coords.latitude, position.coords.longitude),
+             error => addCurrentLocation(52.219761, 21.002734));
+  }
+  
+  function changeMapView() {
+      if (currTileLayer === 'Streets') {
+          mymap.removeLayer(googleStreets);
+          googleSat.addTo(mymap);
+          // console.log('to sat');
+          currTileLayer = 'Sat';
+      }
+      else if (currTileLayer === 'Sat') {
+          mymap.removeLayer(googleSat);
+          googleStreets.addTo(mymap);
+          // console.log('to str');
+          currTileLayer = 'Streets';
+      }
+  }
+  
+  // Buttons
+  
+  L.easyButton('fas fa-map', function(btn, map){
+      changeMapView();
+  }).addTo(mymap);
+  
+  L.easyButton('fas fa-map-marker-alt', function(btn, map){
+      getMyPosition();
+  }).addTo(mymap);
+  
+  // Markers
+  
+  var myMarkers;
+  
+  var red = L.icon({
+      iconUrl: '/static/pics/plant-red.svg',
+      iconSize: [20, 40],
+      iconAnchor: [10, 36],
+      popupAnchor: [0, -20],
+  });
+  var green = L.icon({
+      iconUrl: '/static/pics/plant-green.svg',
+      iconSize: [20, 40],
+      iconAnchor: [10, 36],
+      popupAnchor: [0, -20],
+  });
+  
+  
+  mymap.removeLayer(myMarkers);
+  myMarkers = L.layerGroup();
+  var marker = L.marker(
+      [{{ lat }}, {{ lng }}], 
+      {icon: {% if health == 'healthy' %} green {% else %} red {% endif %} });
+  marker.addTo(mymap);
+  myMarkers.addTo(mymap);
+  
+  mymap.setView([{{ lat }}, {{ lng }}], 12);
+  
+  </script>
+  
 
 {% endblock %}
