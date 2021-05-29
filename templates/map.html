@@ -73,7 +73,7 @@ googleStreets.addTo(mymap);
 function addCurrentLocation(lat, lng){
     mylat = lat;
     mylng = lng
-    mymap.setView([mylat, mylng], 20);
+    mymap.setView([mylat, mylng], 16);
                  
     myMarker = L.marker([mylat, mylng], {icon: man, zIndexOffset: -1})
     myMarker.addTo(mymap);
@@ -138,7 +138,11 @@ var green = L.icon({
 mymap.removeLayer(myMarkers);
 myMarkers = L.layerGroup();
 {% for plant in plants %}
-L.marker([{{ plant['lat'] }}, {{ plant['lng'] }}], {icon: red}).addTo(mymap);
+var marker = L.marker(
+    [{{ plant['lat'] }}, {{ plant['lng'] }}], 
+    {icon: {% if plant['health'] == 'healthy' %} green {% else %} red {% endif %} });
+marker.bindPopup('<a href="/results/{{ plant['id'] }}">link<\a>');
+marker.addTo(mymap);
 {% endfor %}
 myMarkers.addTo(mymap);
 
