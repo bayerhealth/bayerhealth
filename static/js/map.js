@@ -1,8 +1,31 @@
-var map = L.map('mapid').setView([52, 21], 13);
+var map = L.map('mapid').setView([52, 21], 10);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+var googleTerrain = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+
+var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+
+var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+
+googleStreets.addTo(map);
+
+function addCurrentLocation(lat, lng){
+    mylat = lat;
+    mylng = lng
+    map.setView([mylat, mylng], 10);     
+    var marker = L.marker([mylat, mylng]).bindPopup("You're here").addTo(map);
+}
+
+navigator.geolocation.getCurrentPosition(position => addCurrentLocation(position.coords.latitude, position.coords.longitude),
+					 error => addCurrentLocation(54.219761, 21.002734));
 
 // var mymap = L.map('mapid').setView([51.505, -0.09], 13);
 // var mylat;
@@ -103,22 +126,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // }
 
 
-// function addCurrentLocation(lat, lng){
-//     mylat = lat;
-//     mylng = lng
-//     mymap.setView([mylat, mylng], 16);
-//     L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=GGI0R7Kfcu3Y6cnYhFLB', {
-//         attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>',
-//         maxZoom: 20,    
-//         id: 'mapbox.streets',
-//     }).addTo(mymap);
-                 
-//     var marker = L.marker([mylat, mylng], {icon: person}).bindPopup("Tu jesteś").addTo(mymap);
-//     show('Siłownia');
-// }
-
-// navigator.geolocation.getCurrentPosition(position => addCurrentLocation(position.coords.latitude, position.coords.longitude),
-// 					 error => addCurrentLocation(52.219761, 21.002734));
+navigator.geolocation.getCurrentPosition(position => addCurrentLocation(position.coords.latitude, position.coords.longitude),
+					 error => addCurrentLocation(52.219761, 21.002734));
 
 
 // function encodeQueryData(data) {
