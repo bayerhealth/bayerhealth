@@ -50,7 +50,9 @@ def upload_plant(ImageFile, Latitude, Longitude, PlantType, Health, AuthorEMail)
     entry = Plant(ImageFile=ImageFile, Latitude=Latitude, Longitude=Longitude, PlantType=PlantType, Health=Health, AuthorEMail=AuthorEMail)
     print(entry)
     db.session.add(entry)
+    id = entry.Id
     db.session.commit()
+    return id
 
 def get_plant_types(plant_types):
     if plant_types:
@@ -98,10 +100,8 @@ def process():
             filename = secure_filename(rand_id + '.jpg')
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             handle_img(rand_id, session["model"])
-            upload_plant(filename, float(request.form['lat']), float(request.form['lng']), 'apple', 'sick', 'abc@xyz.com')
-            return render_template('results.html', 
-                plant_img=os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            )
+            id = upload_plant(filename, request.form['lat'], request.form['lng'], 'apple', 'sick', 'abc@xyz.com')
+            return redirect(url_for(f"results/{id}"))
 
 @app.route('/map', methods=["GET", "POST"])
 def plant_map():
