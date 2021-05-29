@@ -124,6 +124,14 @@ def settings():
         print(request.form)
         return render_template('settings.html')
 
+@app.route("/results/<id>")
+def results(id):
+    plant = Plant.query.get(id)
+    return render_template("results.html", 
+        lat=plant.Latitude, 
+        lng=plant.Longitude, 
+        plant_img=url_for('static', filename=os.path.join('plants', plant.ImageFile)))
+
 # -------^ROUTES^-------
 
 if __name__ == '__main__':
