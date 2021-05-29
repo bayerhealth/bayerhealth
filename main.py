@@ -114,6 +114,16 @@ def plant_map():
 def statistics():
     return render_template('stats.html')
 
+
+
+@app.route('/settings', methods=["GET", "POST"])
+def settings():
+    if request.method == "GET":
+        return render_template('settings.html')
+    elif request.method == 'POST':
+        print(request.form)
+        return render_template('settings.html')
+
 # -------^ROUTES^-------
 
 if __name__ == '__main__':
