@@ -125,13 +125,13 @@ var red = L.icon({
     iconUrl: 'static/pics/plant-red.svg',
     iconSize: [20, 40],
     iconAnchor: [10, 36],
-    popupAnchor: [0, 0],
+    popupAnchor: [0, -20],
 });
 var green = L.icon({
     iconUrl: 'static/pics/plant-green.svg',
     iconSize: [20, 40],
     iconAnchor: [10, 36],
-    popupAnchor: [0, 0],
+    popupAnchor: [0, -20],
 });
 
 
@@ -141,7 +141,10 @@ myMarkers = L.layerGroup();
 var marker = L.marker(
     [{{ plant['lat'] }}, {{ plant['lng'] }}], 
     {icon: {% if plant['health'] == 'healthy' %} green {% else %} red {% endif %} });
-marker.bindPopup('<a href="/results/{{ plant['id'] }}">link<\a>');
+marker.url = '/results/{{ plant['id']}}';
+marker.on('click', function(){
+        window.location = (this.url);
+    });
 marker.addTo(mymap);
 {% endfor %}
 myMarkers.addTo(mymap);
