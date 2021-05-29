@@ -38,7 +38,7 @@ class Plant(db.Model):
     AuthorEMail = db.Column(db.String(150))
 
     def __repr__(self):
-        return f"Plant('{self.DateTime}', '{self.Latitude}', '{self.Longitude}', '{self.ImageFile}', '{self.PlantType}', '{self.Health}')"
+        return f"Plant('{self.DateTime}', '{self.Latitude}', '{self.Longitude}', '{self.ImageFile}', '{self.PlantType}', '{self.Health}','{self.AuthorEMail}')"
 
 # -----------------^DATABASE^-----------------------
 
@@ -50,8 +50,8 @@ def upload_plant(ImageFile, Latitude, Longitude, PlantType, Health, AuthorEMail)
     entry = Plant(ImageFile=ImageFile, Latitude=Latitude, Longitude=Longitude, PlantType=PlantType, Health=Health, AuthorEMail=AuthorEMail)
     print(entry)
     db.session.add(entry)
-    id = entry.Id
     db.session.commit()
+    id = entry.Id
     return id
 
 def get_plant_types(plant_types):
@@ -99,9 +99,9 @@ def process():
             rand_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
             filename = secure_filename(rand_id + '.jpg')
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            handle_img(rand_id, session["model"])
-            id = upload_plant(filename, request.form['lat'], request.form['lng'], 'apple', 'sick', 'abc@xyz.com')
-            return redirect(url_for(f"results/{id}"))
+            pred = handle_img(rand_id, session["model"])
+            id = upload_plant(filename, float(request.form['lat']), float(request.form['lng']), pred[0], pred[1], session["email"])
+            return redirect(f'/results/{id}')
 
 @app.route('/map', methods=["GET", "POST"])
 def plant_map():
@@ -133,12 +133,13 @@ def settings():
 def results(id):
     plant = Plant.query.get(id)
     return render_template("results.html",
+        type=plant.PlantType,
+        health=plant.Health,
         date=plant.DateTime.date(), 
         lat=plant.Latitude, 
         lng=plant.Longitude, 
-        plant_img=url_for('static', filename=os.path.join('plants', plant.ImageFile),
-        plant=plant.PlantType,
-        health=plant.Health))
+        plant_img=url_for('static', filename=os.path.join('plants', plant.ImageFile)
+        ))
 
 # -------^ROUTES^-------
 
