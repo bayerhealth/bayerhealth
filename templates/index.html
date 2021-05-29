@@ -6,11 +6,21 @@
 </header>
 
 <section>
-  <form action = "index" method = "POST" 
-    enctype = "multipart/form-data">
-    <input type = "file" name = "file" />
-    <input type = "submit"/>
+  <!-- <input type="file" accept="image/*" onchange="previewImage(event)"> -->
+  <img id="preview" style="max-height: 300px; max-width: 300px;"/>
+  <form action = "index" method = "POST" enctype = "multipart/form-data" style="padding-top: 2rem;">
+    
+    <input type="file" name="file" accept="image/*" onchange="previewImage(event)"/>
+    <script>
+      const previewImage = e => {
+          const preview = document.getElementById('preview');
+          preview.src = URL.createObjectURL(e.target.files[0]);
+          preview.onload = () => URL.revokeObjectURL(preview.src);
+      };
+    </script>
+    <input type="submit"/>
   </form>   
 </section>
 
 {% endblock %}
+

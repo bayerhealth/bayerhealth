@@ -3,39 +3,99 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/yegor256/tacit@gh-pages/tacit-css-1.5.1.min.css"/>
-    <link rel="stylesheet" href="/static/style.css"/>
     {% block include %} {% endblock %}
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/yegor256/tacit@gh-pages/tacit-css-1.5.1.min.css"/>
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}"/> -->
     <title>Hadamard</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <style>
-      header{
-        padding: .5rem;
-        margin: 0;
-      }
-      header h1{
-        margin-top: 1rem;
+
+      /* #mapfilter { 
+        z-index: 50;
+      } */
+
+      /* #gymfilter { 
+        color: red;
+      } */
+
+      .container-fluid {
+          padding-right: 15px;
+          padding-left: 15px;
+          margin-right: auto;
+          margin-left: auto;
+          max-width: 900px;
+          overflow:hidden;
+          height: auto;
+          min-height:0px !important;    
       }
 
+
+      /* #map-wrapper {
+          width: 100%;
+          height: 500px;
+          position: relative;
+          border: 1px solid black;
+      } */
+
+
+      /* #button-wrapper {
+          position: absolute;
+          bottom: 10px;
+          width: 100%;
+          border: 1px solid red;
+      } */
+
+      body {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          width: 100%;
+          padding: 0;
+          /* background-color: teal !important; */
+      }
+
+      section {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+      }
+
+
+      form{
+          padding-top: 25%;
+          text-align: center;
+      }
+
+      header{
+          padding: .5rem;
+          margin: 0;
+      }
+      header h1{
+          margin-top: 1rem;
+      }
+      nav {
+          width: 100%;
+      }
       nav li{
-        padding: .66rem;
+          padding: .66rem;
       }
       nav a {
-        font-size: 1.1rem;
-        letter-spacing: 3px;
-        text-decoration: none;
-        color: white;
+          font-size: 1.1rem;
+          letter-spacing: 2px;
+          text-decoration: none;
+          color: white;
       }
 
       nav a:hover {
-        color:rgb(190, 190, 190)
+          color:rgb(216, 216, 216);
+          /* letter-spacing: 3px; */
       }
 
       footer li{
-        margin: .53rem
+          margin: .53rem
       }
-      
 
     </style>
 
@@ -62,7 +122,7 @@
       <ul style="text-align: center; list-style: none;">
         <li>Made with ❤ by J&K</li>
         <li>developed for: </li>
-        <li><img src="static/pics/bayer.png" width="150px"></li>
+        <li><img src="{{ url_for('static', filename='pics/bayer.png') }}" width="150px"></li>
       </ul>
     </footer>
     

@@ -1,4 +1,15 @@
 {% extends "basic.html" %}
+
+{% block include %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+<!-- Easy-Button
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+<script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script> -->
+
+{% endblock %}
+
 {% block content %}
 
 <header>
@@ -6,7 +17,14 @@
 </header>
 
 <section>
-  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo eligendi ad fuga pariatur natus blanditiis, sunt facere quam quas et accusantium? Quae corrupti, accusantium ducimus fuga aperiam modi officia id.</p>
+
+  <!-- Map -->
+  <div id="mapid" style="min-height:400px; width: 100vh;"></div>
+
 </section>
+
+<!-- Map -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/map.js') }}"></script>
 
 {% endblock %}
