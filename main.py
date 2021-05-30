@@ -10,6 +10,7 @@ from flask import Flask, flash, render_template, redirect, request, url_for, jso
 from flask_sqlalchemy import SQLAlchemy
 from utils import handle_img
 from werkzeug.utils import secure_filename
+from mail import sendEmail
 
 # -----------^IMPORTS^---------------
 
