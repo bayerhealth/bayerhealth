@@ -5,8 +5,9 @@ The datasets we used can be found in ```datasets.md```.
 
 This program was tested under Arch Linux. To start the ```Flask``` webserver run:
 ```sh
-export MY_ADDRESS="emailaddress"
-export PASSWORD="password"
+export MY_ADDRESS="emailaddress" # e-mail address
+export PASSWORD="password" # e-mail accout password
+export HOST="host" #SMTP server host
 python3 -m venv env && source env/bin/activate
 pip3 install -r requirements.txt
 python3 main.py
