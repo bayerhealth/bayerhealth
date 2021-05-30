@@ -145,12 +145,26 @@ def settings():
 @app.route("/results/<id>")
 def results(id):
     plant = Plant.query.get(id)
+    plant_tips = os.listdir('static/tips')
+    tips_file = 'default.txt'
+    for plant_tip_file in plant_tips:
+        # print(plant_tip_file)
+        filename, _ = plant_tip_file.split('.', 1)
+        if filename in plant.PlantType:
+            tips_file = plant_tip_file
+            break
+    tips = ''
+    with open(os.path.join('static/tips', tips_file)) as f:
+        tips = f.readlines()
+        print(tips)
+
     return render_template("results.html",
         type=plant.PlantType,
         health=plant.Health,
         date=plant.DateTime.date(), 
         lat=plant.Latitude, 
         lng=plant.Longitude, 
+        tips=tips,
         plant_img=url_for('static', filename=os.path.join('plants', plant.ImageFile)
         ))
 
