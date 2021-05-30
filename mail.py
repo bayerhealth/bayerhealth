@@ -7,9 +7,10 @@ from datetime import datetime, timedelta
 
 MY_ADDRESS = os.environ['MY_ADDRESS']
 PASSWORD = os.environ["PASSWORD"]
+HOST = os.environ["HOST"]
 
 def sendEmail(email, title, contents):
-    s = smtplib.SMTP(host='c4c.org.pl', port=587)
+    s = smtplib.SMTP(host=HOST, port=587)
     s.starttls()
     s.login(MY_ADDRESS, PASSWORD)
     msg = MIMEMultipart()
