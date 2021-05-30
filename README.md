@@ -6,4 +6,5 @@ The datasets we used can be found in ```datasets.md```.
 This program was tested under Arch Linux. To start the ```Flask``` webserver run:
 ```python
 pip3 install -r requirements.txt
-python3 main.py``` 
+python3 main.py
+```
