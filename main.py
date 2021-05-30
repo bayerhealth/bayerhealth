@@ -10,7 +10,7 @@ from flask import Flask, flash, render_template, redirect, request, url_for, jso
 from flask_sqlalchemy import SQLAlchemy
 from utils import handle_img
 from werkzeug.utils import secure_filename
-from mail import sendEmail
+from mail import sendEmail, everyHour
 
 # -----------^IMPORTS^---------------
 
@@ -71,13 +71,14 @@ def get_plant_types(plant_types):
 
 @app.route('/')
 def main():
-    session["email"] = "admin@hadamard.pl"
+    session["email"] = "hadamard@c4c.org.pl"
     session["model"] = "World"
     return redirect(url_for('index'))
 
 
 @app.route('/index')
 def index():
+    everyHour(Plant, session["email"])
     return render_template('index.html')
     
 
