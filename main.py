@@ -11,6 +11,7 @@ from flask_sqlalchemy import SQLAlchemy
 from utils import handle_img
 from werkzeug.utils import secure_filename
 from mail import sendEmail, everyHour
+import stats
 
 # -----------^IMPORTS^---------------
 
@@ -67,6 +68,13 @@ def get_plant_types(plant_types):
         parsed.append(pl_data)
     return parsed
 
+def get_data_for_stats():
+    all_plants = Plant.query.order_by(Plant.DateTime).all()
+    dates = [x.DateTime.date() for x in all_plants]
+    healths = [1 if x.Health == 'healthy' else 0 for x in all_plants]
+    print(dates, healths)
+    return dates, healths
+
 # ------------------^FUNCTIONS^------------------------------
 
 @app.route('/')
@@ -118,6 +126,8 @@ def plant_map():
 
 @app.route('/stats')
 def statistics():
+    dates, healths = get_data_for_stats()
+    stats.make_graph(dates, healths)
     return render_template('stats.html')
 
 

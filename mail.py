@@ -25,7 +25,7 @@ def everyHour(Plant, email):
     def send():
         threading.Timer(3600.0, send).start()
         current = datetime.now()
-        onehago = current-timedelta(hours = 5)
+        onehago = current-timedelta(hours = 1)
         update = "Hello!! Nice to see you again!! Check out these new plants:\n"
         plants = Plant.query.filter(Plant.DateTime >= onehago).\
             filter(Plant.DateTime <= current)
