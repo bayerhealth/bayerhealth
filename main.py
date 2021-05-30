@@ -127,8 +127,8 @@ def plant_map():
 @app.route('/stats')
 def statistics():
     dates, healths = get_data_for_stats()
-    stats.make_graph(dates, healths)
-    return render_template('stats.html')
+    plot = stats.make_graph(dates, healths)
+    return render_template('stats.html', plot=plot)
 
 
 
